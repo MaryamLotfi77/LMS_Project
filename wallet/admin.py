@@ -40,7 +40,7 @@ class TransactionAdmin(admin.ModelAdmin):
         'amount',
         'transaction_type',
         'is_successful',
-        'created_at'
+        'created_at',
     )
     search_fields = (
         'wallet__user__username',
@@ -53,13 +53,12 @@ class TransactionAdmin(admin.ModelAdmin):
         'created_at'
     )
     readonly_fields = (
-        'wallet',
         'amount',
         'transaction_type',
         'enrollment',
-        'created_at'
+        'created_at',
+        'is_successful',
     )
-    list_editable = ('is_successful',)
 
 
     def user_wallet(self, obj):
@@ -69,3 +68,6 @@ class TransactionAdmin(admin.ModelAdmin):
     def transaction_id(self, obj):
         return f'T#{str(obj.id)[:5]}...'
     transaction_id.short_description = 'شناسه تراکنش'
+
+    def has_add_permission(self, request):
+        return False

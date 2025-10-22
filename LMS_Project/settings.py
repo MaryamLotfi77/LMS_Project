@@ -49,6 +49,8 @@ INSTALLED_APPS = [
     'wallet',
     'accounts',
     'placement',
+    'enrollment',
+    'dashboard',
 
 
 ]
@@ -117,9 +119,9 @@ WSGI_APPLICATION = 'LMS_Project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'lms_database_name',
-        'USER': 'lms_maryam',
-        'PASSWORD': 'maryam77',
+        'NAME': 'lms_maryam_db',
+        'USER': 'lms_maryam_77',
+        'PASSWORD': 'maryam1377',
         'HOST': 'localhost',
         'PORT': '5432',
     }

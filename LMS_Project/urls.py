@@ -27,8 +27,8 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, Sp
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # مسیرهای jwt
 
+    # مسیرهای jwt
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
@@ -38,6 +38,8 @@ urlpatterns = [
     path('', include('placement.urls')),
     path('', include('wallet.urls')),
     path('accounts/', include('accounts.urls')),
+    path('', include('enrollment.urls')),
+    path('', include('dashboard.urls')),
 
     # مسیر داکیومنت
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),

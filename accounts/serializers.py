@@ -1,3 +1,4 @@
+import logging
 from rest_framework import serializers
 from django.conf import settings
 from rest_framework.exceptions import APIException
@@ -5,10 +6,11 @@ from django.utils import timezone
 from .models import UserProfile
 from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework import serializers
 
 User = get_user_model()
-
+logger = logging.getLogger(__name__)
 
 
 # ----------------------------------------------------------------------
@@ -79,9 +81,6 @@ class RegisterSerializer(serializers.ModelSerializer):
 #--------------------------------------------------
 
 class LogoutSerializer(serializers.Serializer):
-    """
-    سریالایزر برای باطل کردن توکن Refresh.
-    """
     refresh = serializers.CharField()
 
     def validate(self, attrs):
@@ -91,6 +90,9 @@ class LogoutSerializer(serializers.Serializer):
     def save(self, **kwargs):
         try:
             RefreshToken(self.token).blacklist()
-        except Exception:
-
+        except TokenError as e:
+            logger.info(f"Token error during blacklist (expected behavior): {e}")
             pass
+        except Exception as e:
+            logger.error(f"System error during token blacklisting: {e}", exc_info=True)
+            raise e

@@ -16,7 +16,7 @@ class UserProfileUpdateView(generics.RetrieveUpdateAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_object(self):
-        return self.request.user
+        return self.request.user.profile
 
 #-------------------------------------------------------
 
@@ -24,6 +24,7 @@ class RegisterView(generics.CreateAPIView):
     model = get_user_model()
     serializer_class = RegisterSerializer
     permission_classes = [AllowAny]
+
 
 
 #--------------------------------------------------------

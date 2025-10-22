@@ -66,8 +66,7 @@ class Question(models.Model):
         return f'{self.assessment.title} - سوال {self.id}'
 
 # -------------------------------------------------------------------
-#  مدل گزینه‌های پاسخ
-
+# مدل های گزینه پاسخ
 class Option(models.Model):
     question = models.ForeignKey(
         Question,
@@ -130,7 +129,7 @@ class UserAssessment(models.Model):
 
 #------------------------------------------------
 
-#ذخیره پاسخ های کاربر
+#  ذخیره پاسخ های کاربر
 class UserAnswer(models.Model):
     user_assessment = models.ForeignKey(
         'UserAssessment',

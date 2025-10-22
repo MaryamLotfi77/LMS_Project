@@ -25,8 +25,8 @@ class Wallet(models.Model):
         return f'کیف پول {self.user.get_full_name()} | موجودی: {self.balance} تومان'
 
     class Meta:
-        verbose_name = "کیف پول"
-        verbose_name_plural = "کیف پول‌ها"
+        verbose_name = "wallet"
+        verbose_name_plural = "wallets"
 
 
 # ---------------------------------------------------------------------
@@ -54,12 +54,19 @@ class TransactionManager(models.Manager):
 
 class Transaction(models.Model):
     objects = TransactionManager()
-
     wallet = models.ForeignKey(
-        Wallet,
+        'wallet.Wallet',
         on_delete=models.CASCADE,
         related_name='transactions',
-        verbose_name="کیف پول مرتبط"
+        verbose_name="کیف پول"
+    )
+
+    enrollment = models.ForeignKey(
+        'enrollment.Enrollment',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name="ثبت‌نام"
     )
     amount = models.DecimalField(
         max_digits=10,
@@ -72,21 +79,21 @@ class Transaction(models.Model):
         choices=TransactionType.choices,
         verbose_name="نوع تراکنش"
     )
-    enrollment = models.ForeignKey(
-        'courses.Enrollment',
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        verbose_name="ثبت‌نام مرتبط"
-    )
+
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ تراکنش")
     is_successful = models.BooleanField(default=True, verbose_name="موفقیت‌آمیز")
     description = models.TextField(blank=True, verbose_name="توضیحات")
+    tracking_code = models.CharField(
+        max_length=50,
+        null=True,
+        blank=True,
+        verbose_name="کد پیگیری/شناسه تراکنش خارجی"
+    )
 
     def __str__(self):
         return f'[{self.get_transaction_type_display()}] {self.amount} ({self.wallet.user.username})'
 
     class Meta:
-        verbose_name = "تراکنش"
-        verbose_name_plural = "تراکنش‌ها"
+        verbose_name = "transaction"
+        verbose_name_plural = "Transactions"
         ordering = ['-created_at']

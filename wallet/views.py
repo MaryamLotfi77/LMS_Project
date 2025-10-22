@@ -29,7 +29,7 @@ class TransactionListView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return self.request.user.wallet.transactions.all().order_by('-created_at')
+        return self.request.user.wallet.transactions.all().select_related('enrollment', 'wallet__user').order_by('-created_at')
 
 
 # ----------------------------------------------------------------------

@@ -1,17 +1,12 @@
 from django.db import models
 from django.conf import settings
-from mptt.models import MPTTModel, TreeForeignKey
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.core.exceptions import ValidationError
+from mptt.models import MPTTModel, TreeForeignKey
 
 
-#------------------------------------
 
-class EnrollmentStatus(models.TextChoices):
-    ACTIVE = 'active', 'فعال'
-    RESERVED = 'reserved', 'رزرو شده'
-    CONDITIONAL_PASS = 'conditional_pass', 'قبول مشروط'
-    FAILED = 'failed', 'ناموفق'
+
 
 #--------------------------------------
 
@@ -32,6 +27,10 @@ class Category(MPTTModel):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = ('Categorie')
+        verbose_name_plural = ('Categories')
+
 
 
 #----------------------------------------
@@ -43,6 +42,10 @@ class Course(models.Model):
 
     def __str__(self):
         return self.title
+
+    class Meta:
+        verbose_name = 'Course'
+        verbose_name_plural = 'Course'
 
 
 
@@ -69,6 +72,8 @@ class Level(models.Model):
             models.UniqueConstraint(fields=['course', 'level_number'], name='unique_course_level')
         ]
         ordering = ['level_number']
+        verbose_name = 'Level'
+        verbose_name_plural = 'Levels'
 
 
     def __str__(self):
@@ -127,6 +132,7 @@ class ClassSession(models.Model):
     @property
     # تعداد ثبت نام ها
     def current_enrollment_count(self):
+        from enrollment.models import EnrollmentStatus
         return self.enrollments.filter(status__in=[EnrollmentStatus.ACTIVE, EnrollmentStatus.RESERVED]).count()
 
     @property
@@ -138,22 +144,7 @@ class ClassSession(models.Model):
     def __str__(self):
         return f'{self.level.title} - {self.start_date.strftime("%Y-%m-%d")} (ظرفیت: {self.current_enrollment_count}/{self.capacity})'
 
-#--------------------------------------------
-
-
-class Enrollment(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='enrollments', verbose_name="زبان‌آموز")
-    from .managers import EnrollmentManager
-    objects = EnrollmentManager()
-    session = models.ForeignKey(ClassSession, on_delete=models.CASCADE, related_name='enrollments', verbose_name="کلاس")
-    status = models.CharField(max_length=20, choices=EnrollmentStatus.choices, default=EnrollmentStatus.RESERVED, verbose_name="وضعیت")
-    final_score = models.IntegerField(null=True, blank=True, verbose_name="نمره نهایی")
-    enrolled_at = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ ثبت‌نام")
-
-
     class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['user', 'session'], name='unique_user_session')
-        ]
-    def __str__(self):
-        return f'{self.user.username} در {self.session.level.title} - وضعیت: {self.get_status_display()}'
+        ordering = ['start_date']
+        verbose_name = 'ClassSession'
+        verbose_name_plural = 'ClassSessions'

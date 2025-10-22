@@ -1,60 +1,71 @@
 from rest_framework import generics
-from rest_framework.permissions import IsAuthenticated, AllowAny, BasePermission
-from rest_framework.response import Response
-from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated, AllowAny, BasePermission, IsAdminUser
 from django.shortcuts import get_object_or_404
-from .models import Category, Course, Level, ClassSession, Enrollment, EnrollmentStatus
+from .models import Category, Course, Level, ClassSession
 from .serializers import (
     CategorySerializer,
     CourseSerializer,
     LevelSerializer,
-    ClassSessionSerializer,
-    EnrollmentCreateSerializer,
-    EnrollmentSerializer,
-    EnrollmentScoreUpdateSerializer
+    ClassSessionSerializer
 )
 
-# --------------------------------------------------------------------------------------
-
+#-----------------------------------
 
 class IsInstructorOrAdmin(BasePermission):
     def has_permission(self, request, view):
         return bool(request.user and (request.user.is_staff or request.user.is_superuser))
 
-# --------------------------------------------------------------------------------------
+# ------------------------------------------------------
 
-class CategoryListView(generics.ListAPIView):
+class CategoryListCreateView(generics.ListCreateAPIView):
+
     queryset = Category.objects.filter(parent__isnull=True).prefetch_related('children')
     serializer_class = CategorySerializer
-    permission_classes = [AllowAny]
+
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [AllowAny()]
+        return [IsAuthenticated(), IsInstructorOrAdmin()]
 
 
-class CategoryDetailView(generics.RetrieveAPIView):
+#----------------------------------------------
+
+class CategoryDetailUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Category.objects.all().prefetch_related('children')
     serializer_class = CategorySerializer
-    permission_classes = [AllowAny]
 
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [AllowAny()]
+        return [IsAuthenticated(), IsInstructorOrAdmin()]
 
-# --------------------------------------------------------------------------------------
+# --------------------------------------------------------
 
-class CourseListView(generics.ListAPIView):
+class CourseListCreateView(generics.ListCreateAPIView):
 
     queryset = Course.objects.all().select_related('category')
     serializer_class = CourseSerializer
-    permission_classes = [AllowAny]
 
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [AllowAny()]
+        return [IsAuthenticated(), IsInstructorOrAdmin()]
 
-class CourseDetailView(generics.RetrieveAPIView):
+#---------------------------------------------------------
+
+class CourseDetailUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Course.objects.all().select_related('category')
     serializer_class = CourseSerializer
-    permission_classes = [AllowAny]
 
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [AllowAny()]
+        return [IsAuthenticated(), IsInstructorOrAdmin()]
 
-# --------------------------------------------------------------------------------------
+# ---------------------------------------------------------
 
-class LevelListView(generics.ListAPIView):
+class LevelListCreateView(generics.ListCreateAPIView):
     serializer_class = LevelSerializer
-    permission_classes = [AllowAny]
 
     def get_queryset(self):
         queryset = Level.objects.all().select_related('course', 'prereq_level')
@@ -63,65 +74,60 @@ class LevelListView(generics.ListAPIView):
             queryset = queryset.filter(course_id=course_pk)
         return queryset
 
-
-class LevelDetailView(generics.RetrieveAPIView):
-    queryset = Level.objects.all().select_related('course', 'prereq_level')
-    serializer_class = LevelSerializer
-    permission_classes = [AllowAny]
-
-
-# --------------------------------------------------------------------------------------
-
-class ClassSessionListView(generics.ListAPIView):
-
-    queryset = ClassSession.objects.all().select_related('level', 'instructor').order_by('start_date')
-    serializer_class = ClassSessionSerializer
-    permission_classes = [IsAuthenticated]
-
-
-class ClassSessionDetailView(generics.RetrieveAPIView):
-    queryset = ClassSession.objects.all().select_related('level', 'instructor')
-    serializer_class = ClassSessionSerializer
-    permission_classes = [IsAuthenticated]
-
-
-# --------------------------------------------------------------------------------------
-
-class EnrollmentListCreateView(generics.ListCreateAPIView):
-    serializer_class = EnrollmentCreateSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        return Enrollment.objects.filter(user=self.request.user).select_related('session__level__course').order_by(
-            '-enrolled_at')
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [AllowAny()]
+        return [IsAuthenticated(), IsInstructorOrAdmin()]
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        course_pk = self.kwargs.get('course_pk')
+        if course_pk:
+            course = get_object_or_404(Course, pk=course_pk)
+            serializer.save(course=course)
+        else:
+            serializer.save()
 
 
-class EnrollmentStatusCheckView(APIView):
-    permission_classes = [IsAuthenticated]
+class LevelDetailUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Level.objects.all().select_related('course', 'prereq_level')
+    serializer_class = LevelSerializer
 
-    def get(self, request, *args, **kwargs):
-        next_level_num = request.query_params.get('level')
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [AllowAny()]
+        return [IsAuthenticated(), IsInstructorOrAdmin()]
 
-        if next_level_num is None:
-            return Response({"detail": "پارامتر 'level' الزامی است."}, status=400)
+# --------------------------------------------------
 
-        try:
-            next_level_num = int(next_level_num)
-        except ValueError:
-            return Response({"detail": "پارامتر 'level' باید یک عدد باشد."}, status=400)
+class ClassSessionListCreateView(generics.ListCreateAPIView):
+    serializer_class = ClassSessionSerializer
 
-        prereq_status = Enrollment.objects.get_user_prerequisite_status(request.user, next_level_num)
+    def get_queryset(self):
+        queryset = ClassSession.objects.all().select_related('level', 'instructor').order_by('start_date')
+        level_pk = self.kwargs.get('level_pk')
+        if level_pk:
+            queryset = queryset.filter(level_id=level_pk)
+        return queryset
 
-        return Response(prereq_status)
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [AllowAny()]
+        return [IsAuthenticated(), IsInstructorOrAdmin()]
+
+    def perform_create(self, serializer):
+        level_pk = self.kwargs.get('level_pk')
+        if level_pk:
+            level = get_object_or_404(Level, pk=level_pk)
+            serializer.save(level=level)
+        else:
+            serializer.save()
 
 
-# --------------------------------------------------------------------------------------
+class ClassSessionDetailUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = ClassSession.objects.all().select_related('level', 'instructor')
+    serializer_class = ClassSessionSerializer
 
-class EnrollmentUpdateScoreView(generics.UpdateAPIView):
-    queryset = Enrollment.objects.all().select_related('user', 'session__level__course')
-    serializer_class = EnrollmentScoreUpdateSerializer
-    permission_classes = [IsInstructorOrAdmin]
-    http_method_names = ['patch']
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [AllowAny()]
+        return [IsAuthenticated(), IsInstructorOrAdmin()]

@@ -3,8 +3,7 @@ from .models import Wallet, Transaction, TransactionType
 from django.core.validators import MinValueValidator
 
 from .services import WalletService
-from courses.models import Enrollment
-
+from enrollment.models import Enrollment
 
 # ----------------------------------------------------------------------
 
@@ -25,11 +24,10 @@ class TransactionSerializer(serializers.ModelSerializer):
 # ----------------------------------------------------------------------
 
 class WalletSerializer(serializers.ModelSerializer):
-    transactions = TransactionSerializer(many=True, read_only=True)
 
     class Meta:
         model = Wallet
-        fields = ['balance', 'updated_at', 'transactions']
+        fields = ['balance', 'updated_at']
         read_only_fields = fields
 
 
@@ -53,6 +51,5 @@ class WalletDepositSerializer(serializers.Serializer):
         amount = self.validated_data['amount']
 
         wallet = WalletService.deposit(user=user, amount=amount)
-
 
         return wallet
