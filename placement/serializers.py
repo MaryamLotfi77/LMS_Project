@@ -23,10 +23,13 @@ class QuestionSerializer(serializers.ModelSerializer):
             'question_type',
             'score_weight',
             'correct_answer_text',
-            'options'  # فیلد تودرتو
-        ]
-        extra_kwargs = {'assessment': {'required': False}}
+            'options',
+            'assessment'
 
+        ]
+        extra_kwargs = {
+            'assessment': {'write_only': True, 'required': False}
+        }
     def create(self, validated_data):
         options_data = validated_data.pop('options', [])
         question = Question.objects.create(**validated_data)

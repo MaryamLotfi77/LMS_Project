@@ -3,6 +3,7 @@ from django.db.models import Q
 from .models import Enrollment, EnrollmentStatus
 from wallet.services import WalletService
 from rest_framework.exceptions import ValidationError
+from courses.models import Level
 
 
 class EnrollmentService:
@@ -28,7 +29,6 @@ class EnrollmentService:
             raise ValidationError({
                 "detail": f"شما واجد شرایط ثبت‌نام در این سطح نیستید. {prereq_status_data.get('reason')}"
             })
-
 
         if prereq_status == 'pass' or prereq_status == 'eligible':
             initial_status = EnrollmentStatus.ACTIVE
@@ -56,72 +56,69 @@ class EnrollmentService:
             raise ValidationError({"detail": f"خطا در عملیات پرداخت: {e}"})
 
 
-
-#----------------------------------------
-
-@staticmethod
-@transaction.atomic
-def finalize_score(enrollment_instance, final_score):
-    reserved_enrollment = enrollment_instance
-    current_level_num = enrollment_instance.session.level.level_number
-    user = enrollment_instance.user
-
-    if final_score < 61:
-        new_status = EnrollmentStatus.FAILED
-    elif 61 <= final_score <= 75:
-        new_status = EnrollmentStatus.CONDITIONAL_PASS
-    else:  # final_score >= 76
-        new_status = EnrollmentStatus.ACTIVE
-
     # =========================================================
 
-    # مدیریت وضعیت ثبت‌نام فعلی
-    if reserved_enrollment:
-        if new_status in [EnrollmentStatus.ACTIVE, EnrollmentStatus.CONDITIONAL_PASS]:
-            reserved_enrollment.status = EnrollmentStatus.ACTIVE
-            reserved_enrollment.save()
-        elif new_status == EnrollmentStatus.FAILED:
+    @staticmethod
+    @transaction.atomic
+    def finalize_score(enrollment_instance, final_score):
+        reserved_enrollment = enrollment_instance
+        current_level_num = enrollment_instance.session.level.level_number
+        user = enrollment_instance.user
 
-            reserved_enrollment.status = EnrollmentStatus.FAILED
-            reserved_enrollment.save()
 
-            EnrollmentService._handle_refund(reserved_enrollment, reserved_enrollment.session.price)
+        if final_score < 61:
+            new_status = EnrollmentStatus.FAILED
+        elif 61 <= final_score <= 75:
+            new_status = EnrollmentStatus.CONDITIONAL_PASS
+        else:  # final_score >= 76
+            new_status = EnrollmentStatus.ACTIVE
 
-    # =========================================================
+        # =========================================================
 
-    from courses.models import Level
+        if reserved_enrollment:
+            if new_status in [EnrollmentStatus.ACTIVE, EnrollmentStatus.CONDITIONAL_PASS]:
+                reserved_enrollment.status = EnrollmentStatus.ACTIVE
+                reserved_enrollment.save()
+            elif new_status == EnrollmentStatus.FAILED:
 
-    try:
-        prereq_level = enrollment_instance.session.level.prereq_level
+                reserved_enrollment.status = EnrollmentStatus.FAILED
+                reserved_enrollment.save()
 
-        if prereq_level:
-            prereq_enrollment = Enrollment.objects.filter(
-                user=user,
-                session__level=prereq_level,
-                status=EnrollmentStatus.CONDITIONAL_PASS
-            ).first()
+                EnrollmentService._handle_refund(reserved_enrollment, reserved_enrollment.session.price)
 
-        else:
+        # =========================================================
+
+        try:
+            prereq_level = enrollment_instance.session.level.prereq_level
+
+            if prereq_level:
+                prereq_enrollment = Enrollment.objects.filter(
+                    user=user,
+                    session__level=prereq_level,
+                    status=EnrollmentStatus.CONDITIONAL_PASS
+                ).first()
+
+            else:
+                prereq_enrollment = None
+
+        except Level.DoesNotExist:
             prereq_enrollment = None
 
-    except Level.DoesNotExist:
-        prereq_enrollment = None
+        if prereq_enrollment:
+            if final_score >= 76:
+                prereq_enrollment.status = EnrollmentStatus.ACTIVE
+                prereq_enrollment.save()
+            else:
+                prereq_enrollment.status = EnrollmentStatus.FAILED
+                prereq_enrollment.save()
 
-    if prereq_enrollment:
-        if final_score >= 76:
-            prereq_enrollment.status = EnrollmentStatus.ACTIVE
-            prereq_enrollment.save()
-        else:
-            prereq_enrollment.status = EnrollmentStatus.FAILED
-            prereq_enrollment.save()
+                enrollment_instance.status = EnrollmentStatus.FAILED
+                enrollment_instance.save()
 
-            enrollment_instance.status = EnrollmentStatus.FAILED
-            enrollment_instance.save()
+                EnrollmentService._handle_refund(enrollment_instance, enrollment_instance.session.price)
+                EnrollmentService._handle_refund(prereq_enrollment, prereq_enrollment.session.price)
 
-            EnrollmentService._handle_refund(enrollment_instance, enrollment_instance.session.price)
-            EnrollmentService._handle_refund(prereq_enrollment, prereq_enrollment.session.price)
+        enrollment_instance.final_score = final_score
+        enrollment_instance.save()
 
-    enrollment_instance.final_score = final_score
-    enrollment_instance.save()
-
-    return enrollment_instance
+        return enrollment_instance

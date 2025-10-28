@@ -6,7 +6,7 @@ from. views import (EnrollmentListCreateView,
                     )
 
 urlpatterns = [
-path('enrollments/', EnrollmentListCreateView.as_view(), name='enrollment-list-create'),
+    path('enrollments/', EnrollmentListCreateView.as_view(), name='enrollment-list-create'),
     path('enrollments/status/', EnrollmentStatusCheckView.as_view(), name='enrollment-status-check'),
     path('enrollments/<int:pk>/score/', EnrollmentUpdateScoreView.as_view(), name='enrollment-update-score'),
 

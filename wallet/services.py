@@ -30,14 +30,14 @@ class WalletService:
             wallet.save()
             wallet.refresh_from_db()
 
-            Transaction.objects.create_successful_transaction(
-                wallet=wallet,
-                amount=amount,
-                transaction_type=TransactionType.PAYMENT,
-                enrollment=enrollment_obj,
-                description=f'پرداخت هزینه ثبت‌نام دوره {enrollment_obj.course.title}',
-            )
-            return wallet
+        Transaction.objects.create_successful_transaction(
+            wallet=wallet,
+            amount=amount,
+            transaction_type=TransactionType.PAYMENT,
+            enrollment=enrollment_obj,
+            description=f'پرداخت هزینه ثبت‌نام دوره {enrollment_obj.session.level.course.title}',
+        )
+        return wallet
 
     @staticmethod
     def refund_enrollment(enrollment_obj, amount):
@@ -52,6 +52,7 @@ class WalletService:
                 amount=amount,
                 transaction_type=TransactionType.REFUND,
                 enrollment=enrollment_obj,
-                description=f'برگشت وجه ثبت‌نام به دلیل لغو/مشروطی دوره {enrollment_obj.course.title}',
+                description=f'برگشت وجه ثبت‌نام به دلیل لغو/مشروطی دوره {enrollment_obj.session.level.course.title}',
+
             )
             return wallet
