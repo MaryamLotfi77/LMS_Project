@@ -1,0 +1,923 @@
+{
+	"info": {
+		"_postman_id": "06bb2357-b088-4e48-ba1b-9e00ee5c6be1",
+		"name": "LMS INGHLISH",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "42709233",
+		"_collection_link": "https://www.postman.com/maryek/workspace/event-api/collection/42709233-06bb2357-b088-4e48-ba1b-9e00ee5c6be1?action=share&source=collection_link&creator=42709233"
+	},
+	"item": [
+		{
+			"name": "categories",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/categories/",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"categories",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "categories/2",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/categories/2",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"categories",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "courses",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/courses/",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"courses",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "courses/1",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/courses/1",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"courses",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "courses/1/levels/",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/courses/1/levels/",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"courses",
+						"1",
+						"levels",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "levels/1/sessions/",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/levels/1/sessions/",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"levels",
+						"1",
+						"sessions",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "categories/",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{vault:authorization-secret}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"زبان فرانسوی\"\r\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/categories/",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"categories",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "courses",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{vault:authorization-secret}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"زبان آلمانی سطح مبتدی\",\r\n    \"description\": \"توضیحاتی کامل در مورد محتوای این دوره.\",\r\n    \"category\": 2\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/courses/",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"courses",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "courses/1/levels/",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{vault:authorization-secret}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"course\": 1,\r\n    \"level_number\": 2,\r\n    \"title\": \"Module 1\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/courses/1/levels/",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"courses",
+						"1",
+						"levels",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "levels/2/sessions/",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{vault:authorization-secret}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"level\": 2, \r\n    \"instructor\": 1, \r\n    \"capacity\": 20,\r\n    \"start_date\": \"2025-11-01T10:00:00Z\" \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/levels/2/sessions/",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"levels",
+						"2",
+						"sessions",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "categories/3/",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{vault:authorization-secret}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/categories/3/",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"categories",
+						"3",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "accounts/profile/",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{vault:authorization-secret}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/accounts/profile/",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"accounts",
+						"profile",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "accounts/register/",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\":\"yekta\",\r\n    \"email\": \"yekta@gmail.com\",\r\n    \"first_name\": \"یکتا\",\r\n    \"last_name\": \"باقرزاده\",\r\n    \"password\": \"123456\" \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/accounts/register/",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"accounts",
+						"register",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "accounts/logout/",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{vault:authorization-secret}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"refresh\": \"{{vault:json-web-token}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/accounts/logout/",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"accounts",
+						"logout",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "wallet/deposit/",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{vault:authorization-secret}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"amount\": 50000 \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/wallet/deposit/",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"wallet",
+						"deposit",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "transactions/",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{vault:authorization-secret}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/transactions/",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"transactions",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "enrollments/",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{vault:authorization-secret}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/enrollments/",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"enrollments",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "enrollments/status/?level=2",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{vault:authorization-secret}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/enrollments/status/?level=2",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"enrollments",
+						"status",
+						""
+					],
+					"query": [
+						{
+							"key": "level",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "enrollments/",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{vault:authorization-secret}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"session\": 1}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/enrollments/",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"enrollments",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "enrollments/4/score/",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{vault:authorization-secret}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"final_score\": 90}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/enrollments/4/score/",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"enrollments",
+						"4",
+						"score",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "dashboard/summary/",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{vault:authorization-secret}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/dashboard/summary/",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"dashboard",
+						"summary",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "assessments/",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{vault:authorization-secret}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/assessments/",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"assessments",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "assessments/",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{vault:authorization-secret}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"آزمون میان ترم سطح ۱\",\r\n    \"description\": \"ارزیابی دانش آموزان در نیمه اول دوره\",\r\n    \"target_level\": 1 // ID سطح مورد نظر\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/assessments/",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"assessments",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "assessments/1/",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{vault:authorization-secret}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/assessments/1/",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"assessments",
+						"1",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "assessments/1/questions/",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{vault:authorization-secret}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/assessments/1/questions/",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"assessments",
+						"1",
+						"questions",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "assessments/2/questions/",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{vault:authorization-secret}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"text\": \"کدام یک از دستورات زیر یک سوپر یوزر در جنگو ایجاد می کند؟\",\r\n    \"question_type\": \"mc\", \r\n    \"score_weight\": 5,\r\n    \"correct_answer_text\": null, \r\n    \"options\": [\r\n        {\r\n            \"text\": \"python manage.py createsuperuser\",\r\n            \"is_correct\": true\r\n        }\r\n        // ...\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/assessments/2/questions/",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"assessments",
+						"2",
+						"questions",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "assessments/2/questions/",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{vault:authorization-secret}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"text\": \"نام اولین مرحله در فرآیند پاسخ به یک درخواست HTTP در جنگو چیست؟\",\r\n    \"question_type\": \"ti\",  \r\n    \"score_weight\": 10,\r\n    \"correct_answer_text\": \"URL Resolution\",\r\n    \"options\": [] // یا کلاً فیلد options را حذف کنید.\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/assessments/2/questions/",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"assessments",
+						"2",
+						"questions",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "assessments/2/questions/1/",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{vault:authorization-secret}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/assessments/2/questions/1/",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"assessments",
+						"2",
+						"questions",
+						"1",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "",
+			"type": "default"
+		}
+	]
+}

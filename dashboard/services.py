@@ -26,7 +26,7 @@ class DashboardService:
 
     @staticmethod
     def get_instructor_stats(user):
-    # آمار ثبت نام کنندهها و نمرات برای یک مربی خاص
+    # آمار ثبت نام کنندهها و نمرات
         total_sessions = ClassSession.objects.filter(instructor=user).count()
 
         enrollment_stats = Enrollment.objects.filter(
